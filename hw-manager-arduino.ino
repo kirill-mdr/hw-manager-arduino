@@ -7,8 +7,7 @@
 //PCdata[5] - max speed limit
 //PCdata[6] - is dynamic light
 //PCdata[7] - brightness
-//PCdata[8] - red
-//PCdata[9] - green
+//PCdata[8] - red 
 //PCdata[10] - blue
 byte speedMIN = 5;
 byte speedMAX = 95;
@@ -16,10 +15,10 @@ byte tempMIN = 23;
 byte tempMAX = 40;
 
 // Pins
-#define FAN_PIN 9      // fans pin
+#define FAN_PIN 10      // fans pin
 #define R_PIN 5        // red color
-#define G_PIN 3        // green color
-#define B_PIN 6        // blue color
+#define G_PIN 6        // green color
+#define B_PIN 3        // blue color
 #define SENSOR_PIN 14  // temperature sensor
 
 
@@ -134,8 +133,8 @@ void dutyCalculate() {
     duty = map(temp1, tempMIN, tempMAX, speedMIN, speedMAX);
   }
 
-  if (duty < 5) {
-    duty = 5;
+  if (duty < 0) {
+    duty = 0;
   }
 }
 
