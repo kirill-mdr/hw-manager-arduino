@@ -1,4 +1,3 @@
-// Configuration
 //PCdata[0] - is const speed
 //PCdata[1] - const speed
 //PCdata[2] - min temperature limit
@@ -7,7 +6,7 @@
 //PCdata[5] - max speed limit
 //PCdata[6] - is dynamic light
 //PCdata[7] - brightness
-//PCdata[8] - red 
+//PCdata[8] - red
 //PCdata[10] - blue
 byte speedMIN = 5;
 byte speedMAX = 95;
@@ -15,7 +14,7 @@ byte tempMIN = 23;
 byte tempMAX = 40;
 
 // Pins
-#define FAN_PIN 10      // fans pin
+#define FAN_PIN 10     // fans pin
 #define R_PIN 5        // red color
 #define G_PIN 6        // green color
 #define B_PIN 3        // blue color
@@ -43,8 +42,8 @@ int brightness, k, R, G, B, Rf, Gf, Bf;
 
 byte temp1;
 
-char inData[82];  // массив входных значений (СИМВОЛЫ)
-int PCdata[20];   // массив численных значений показаний с компьютера
+char inData[82];  // array for parsing
+int PCdata[12];   // settings from PC
 byte index = 0;
 String string_convert;
 boolean hasSettingsFlag = 0;
@@ -128,13 +127,15 @@ void dutyCalculate() {
       duty = PCdata[1];
     } else {
       duty = map(temp1, PCdata[2], PCdata[3], PCdata[4], PCdata[5]);
+
+      if (temp1 < PCdata[2]) duty = PCdata[4];
+      else if (temp1 >= PCdata[3]) duty = PCdata[5];
     }
   } else {
     duty = map(temp1, tempMIN, tempMAX, speedMIN, speedMAX);
-  }
 
-  if (duty < 0) {
-    duty = 0;
+    if (temp1 < tempMin) duty = speedMIN;
+    else if (temp1 >= tempMAX) duty = speedMAX;
   }
 }
 
@@ -146,8 +147,8 @@ void timeoutTick() {
     Serial.println(temp1);
     Serial.print("duty = ");
     Serial.println(duty);
-    // Serial.print("led = ");
-    // Serial.println(LEDcolor);
+    Serial.print("led = ");
+    Serial.println(LEDcolor);
     timeout = millis();
   }
 }
@@ -167,11 +168,6 @@ void parsing() {
       String value = "";
       while ((str = strtok_r(p, ";", &p)) != NULL) {
         string_convert = str;
-        PCdata[index] = string_convert.toInt();
-        Serial.print("PCDATA[");
-        Serial.print(index);
-        Serial.print("] = ");
-        Serial.println(PCdata[index]);
         index++;
       }
       index = 0;
