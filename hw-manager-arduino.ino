@@ -128,13 +128,13 @@ void dutyCalculate() {
     } else {
       duty = map(temp1, PCdata[2], PCdata[3], PCdata[4], PCdata[5]);
 
-      if (temp1 < PCdata[2]) duty = PCdata[4];
+      if (temp1 < PCdata[2]) duty = 0;
       else if (temp1 >= PCdata[3]) duty = PCdata[5];
     }
   } else {
     duty = map(temp1, tempMIN, tempMAX, speedMIN, speedMAX);
 
-    if (temp1 < tempMin) duty = speedMIN;
+    if (temp1 < tempMin) duty = 0;
     else if (temp1 >= tempMAX) duty = speedMAX;
   }
 }
