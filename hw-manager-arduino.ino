@@ -168,6 +168,7 @@ void parsing() {
       String value = "";
       while ((str = strtok_r(p, ";", &p)) != NULL) {
         string_convert = str;
+        PCdata[index] = string_convert.toInt();
         index++;
       }
       index = 0;
